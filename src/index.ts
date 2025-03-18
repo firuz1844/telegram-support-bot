@@ -87,7 +87,6 @@ function main(bot: TelegramAddon = defaultBot, logs = true) {
     [
       { command: "start", description: "Начать работу с ботом" },
       { command: "faq", description: "Часто задаваемые вопросы" },
-      { command: "rate", description: "Помощь" },
       { command: "id", description: "Посмотреть мой Telegram ID" },
     ],
     {
