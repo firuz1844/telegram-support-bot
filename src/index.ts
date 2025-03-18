@@ -89,18 +89,97 @@ function main(bot: TelegramAddon = defaultBot, logs = true) {
   bot.command('unban', (ctx: Context) => commands.unbanCommand(ctx));
   bot.command('clear', (ctx: Context) => commands.clearCommand(ctx));
   bot.command('id', (ctx: Context) =>
+      { command: "start", description: "Начать работу с ботом" },
+      { command: "faq", description: "Часто задаваемые вопросы" },
+      { command: "rate", description: "Помощь" },
+      { command: "id", description: "Посмотреть мой Telegram ID" },
+    ],
+    {
+      scope: { type: "default" },
+    }
+  );
+
+  bot.bot.api.setMyCommands(
+    [
+      { command: "open", description: "Показать открытые тикеты" },
+      { command: "close", description: "Закрыть тикет" },
+      { command: "ban", description: "Заблокировать пользователя" },
+      { command: "unban", description: "Разблокировать пользователя" },
+      { command: "reopen", description: "Переоткрыть тикет" },
+      { command: "clear", description: "Очистить чат" },
+      { command: "id", description: "Посмотреть ID" },
+    ],
+    {
+      scope: { type: "all_chat_administrators" },
+    }
+  );
+
+  // const workingHours = { start: 10, end: 19 }; // Часы работы
+
+  // bot.on("message", async (ctx) => {
+  //   const now = new Date();
+  //   const hour = now.getHours();
+
+  //   if (hour < workingHours.start || hour >= workingHours.end) {
+  //     await ctx.reply(
+  //       "Мы сейчас не работаем. Ответим в рабочее время (09:00 - 18:00)."
+  //     );
+  //   } else {
+  //     // Основная логика бота
+  //   }
+  // });
+
+  bot.hears(["цена", "оплата", "сколько стоит"], async (ctx) => {
+    await ctx.reply(
+      "Актуальные тарифы можно посмотреть на сайте: https://karvpn.ru/pricing"
+    );
+  });
+
+  // bot.bot.api.setChatMenuButton({
+  //   menu_button: {
+  //     type: "commands",
+  //   },
+  // });
+
+  // bot.command("rate", async (ctx) => {
+  //   await ctx.reply("Оцените нашу работу:", {
+  //     reply_markup: {
+  //       inline_keyboard: [
+  //         [{ text: "⭐️ 1", callback_data: "rate_1" }],
+  //         [{ text: "⭐️⭐️ 2", callback_data: "rate_2" }],
+  //         [{ text: "⭐️⭐️⭐️ 3", callback_data: "rate_3" }],
+  //         [{ text: "⭐️⭐️⭐️⭐️ 4", callback_data: "rate_4" }],
+  //         [{ text: "⭐️⭐️⭐️⭐️⭐️ 5", callback_data: "rate_5" }],
+  //       ],
+  //     },
+  //   });
+  // });
+
+  bot.on("callback_query:data", async (ctx) => {
+    if (ctx.callbackQuery.data.startsWith("rate_")) {
+      const rating = ctx.callbackQuery.data.replace("rate_", "");
+      await ctx.answerCallbackQuery(`Спасибо за вашу оценку: ${rating} ⭐️`);
+    }
+  });
+  bot.command("open", (ctx: Context) => commands.openCommand(ctx));
+  bot.command("close", (ctx: Context) => commands.closeCommand(ctx));
+  bot.command("ban", (ctx: Context) => commands.banCommand(ctx));
+  bot.command("reopen", (ctx: Context) => commands.reopenCommand(ctx));
+  bot.command("unban", (ctx: Context) => commands.unbanCommand(ctx));
+  bot.command("clear", (ctx: Context) => commands.clearCommand(ctx));
+  bot.command("id", (ctx: Context) =>
     middleware.reply(ctx, `User ID: ${ctx.from.id}\nGroup ID: ${ctx.chat.id}`, {
       parse_mode: cache.config.parse_mode,
-    }),
+    })
   );
-  bot.command('faq', (ctx: Context) =>
+  bot.command("faq", (ctx: Context) =>
     middleware.reply(ctx, cache.config.language.faqCommandText, {
       parse_mode: cache.config.parse_mode,
-    }),
+    })
   );
-  bot.command('help', (ctx: Context) => commands.helpCommand(ctx));
-  bot.command('links', (ctx: Context) => {
-    let links = '';
+  bot.command("help", (ctx: Context) => commands.helpCommand(ctx));
+  bot.command("links", (ctx: Context) => {
+    let links = "";
     const subcategories = [];
     for (const i in cache.config.categories) {
       if (i !== undefined) {
