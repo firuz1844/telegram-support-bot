@@ -82,13 +82,9 @@ function main(bot: TelegramAddon = defaultBot, logs = true) {
   // bot..getMe().then((botInfo) => bot.options.username = botInfo.username);
 
   // Bot commands
-  bot.command('open', (ctx: Context) => commands.openCommand(ctx));
-  bot.command('close', (ctx: Context) => commands.closeCommand(ctx));
-  bot.command('ban', (ctx: Context) => commands.banCommand(ctx));
-  bot.command('reopen', (ctx: Context) => commands.reopenCommand(ctx));
-  bot.command('unban', (ctx: Context) => commands.unbanCommand(ctx));
-  bot.command('clear', (ctx: Context) => commands.clearCommand(ctx));
-  bot.command('id', (ctx: Context) =>
+
+  bot.bot.api.setMyCommands(
+    [
       { command: "start", description: "Начать работу с ботом" },
       { command: "faq", description: "Часто задаваемые вопросы" },
       { command: "rate", description: "Помощь" },
